@@ -10,7 +10,7 @@ import {
   QueueSchedulerPro,
 } from "@taskforcesh/bullmq-pro";
 
-const prefix = "lukepolo";
+const prefix = "lukepolo-1";
 const queueName = "default";
 const connection = new IORedis({
   db: 1,
@@ -29,15 +29,7 @@ const bullQueueOptions = {
   connection,
 };
 
-const defaultQueue = new QueuePro(
-  queueName,
-  Object.assign(
-    {
-      isPro: true,
-    },
-    bullQueueOptions
-  )
-);
+const defaultQueue = new QueuePro(queueName, bullQueueOptions);
 
 new FlowProducerPro(bullQueueOptions);
 
