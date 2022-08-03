@@ -25,3 +25,15 @@ app.use("/queues", serverAdapter.getRouter());
 app.listen(3000, () => {
   console.log("open http://localhost:3000/queues");
 });
+
+
+defaultQueue.add('myJobName', { foo: 'bar' });
+
+// run wokrer too
+import { Worker } from 'bullmq';
+
+const worker = new Worker(queueName, async job => {
+  // Will print { foo: 'bar'} for the first job
+  // and { qux: 'baz' } for the second.
+  console.log(job.data);
+});
