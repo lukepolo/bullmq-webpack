@@ -27,8 +27,6 @@ app.listen(3000, () => {
   console.log("open http://localhost:3000/queues");
 });
 
-defaultQueue.add("myJobName", { foo: "bar" });
-
 import { Worker } from "bullmq";
 
 new Worker(
@@ -40,3 +38,7 @@ new Worker(
     connection,
   }
 );
+
+setInterval(() => {
+  defaultQueue.add("myJobName", { foo: "bar" });
+}, 1000)
