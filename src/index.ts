@@ -10,7 +10,7 @@ import {
   QueueSchedulerPro,
 } from "@taskforcesh/bullmq-pro";
 
-const prefix = "lukepolo-1";
+const prefix = "lukepolo-2";
 const queueName = "default";
 const connection = new IORedis({
   db: 1,
@@ -59,7 +59,7 @@ new WorkerPro(
   async (job) => {
     console.log(`Process Job on ${queueName}`, job.data);
   },
-  Object.assign(bullQueueOptions)
+  bullQueueOptions
 );
 
 setInterval(() => {
