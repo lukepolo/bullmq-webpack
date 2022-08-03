@@ -4,10 +4,11 @@ import { QueuePro } from "@taskforcesh/bullmq-pro";
 import { ExpressAdapter } from "@bull-board/express";
 import { BullMQAdapter } from "@bull-board/api/bullMQAdapter";
 
+const connection = {
+  port: 6386,
+};
 const defaultQueue = new QueuePro("default", {
-  connection: {
-    port: 6386,
-  },
+  connection,
 });
 
 const serverAdapter = new ExpressAdapter();
@@ -26,14 +27,16 @@ app.listen(3000, () => {
   console.log("open http://localhost:3000/queues");
 });
 
+defaultQueue.add("myJobName", { foo: "bar" });
 
-defaultQueue.add('myJobName', { foo: 'bar' });
+import { Worker } from "bullmq";
 
-// run wokrer too
-import { Worker } from 'bullmq';
-
-const worker = new Worker(queueName, async job => {
-  // Will print { foo: 'bar'} for the first job
-  // and { qux: 'baz' } for the second.
-  console.log(job.data);
-});
+new Worker(
+  "default",
+  async (job) => {
+    console.log(`Process Job on Default`, job.data);
+  },
+  {
+    connection,
+  }
+);
