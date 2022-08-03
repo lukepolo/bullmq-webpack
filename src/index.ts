@@ -54,14 +54,47 @@ new QueueSchedulerPro(queueName, {
   connection,
 });
 
-new WorkerPro(
-  queueName,
-  async (job) => {
-    console.log(`Process Job on ${queueName}`, job.data);
-  },
-  bullQueueOptions
-);
+const workers: Array<{
+  queue: string;
+  worker: WorkerPro;
+}> = [];
+
+workers.push({
+  queue: queueName,
+  worker: new WorkerPro(
+    queueName,
+    async (job) => {
+      console.log(`Process Job on ${queueName}`, job.data);
+    },
+    bullQueueOptions
+  ),
+});
 
 setInterval(() => {
   defaultQueue.add("myJobName", { foo: "bar" });
 }, 1000);
+
+/**
+ * Setup shutdown procedure for when workers are running
+ */
+process.once(DEV ? "SIGUSR2" : "SIGTERM", async () => {
+  console.warn(`Gracefully Shutting Down...`);
+  console.info(`---------------------------`);
+  console.warn(`Stopping Workers...`);
+  await Promise.all(
+    workers.map(async ({ queue, worker }) => {
+      console.info(`    [${queue}] stopping...`);
+      await worker.close().catch((error) => {
+        console.error(
+          `        [${queue}] unable to shutdown worker gracefully`,
+          error
+        );
+      });
+      console.info(`    [${queue}] stopped`);
+    })
+  );
+  console.info(`Stopped Workers`);
+  console.info(`---------------------------`);
+
+  process.exit(0);
+});
