@@ -12,7 +12,7 @@ import {
 
 const prefix = "lukepolo-2";
 const queueName = "default";
-const connection = new IORedis({
+const redisConnectionOptions = {
   db: 1,
   port: 6386,
   enableReadyCheck: false,
@@ -22,11 +22,14 @@ const connection = new IORedis({
   retryStrategy() {
     return 5 * 1000;
   },
-});
+}
+
+const connection = new IORedis(redisConnectionOptions);
 
 const bullQueueOptions = {
   prefix,
-  connection,
+  connection
+  // connection: redisConnectionOptions,
 };
 
 const defaultQueue = new QueuePro(queueName, bullQueueOptions);
@@ -49,10 +52,7 @@ app.listen(3001, () => {
   console.log("open http://localhost:3001/queues");
 });
 
-new QueueSchedulerPro(queueName, {
-  prefix,
-  connection,
-});
+new QueueSchedulerPro(queueName, bullQueueOptions);
 
 const workers: Array<{
   queue: string;
