@@ -1,17 +1,45 @@
 import express from "express";
+import IORedis from "ioredis";
 import { createBullBoard } from "@bull-board/api";
-import { QueuePro } from "@taskforcesh/bullmq-pro";
 import { ExpressAdapter } from "@bull-board/express";
 import { BullMQAdapter } from "@bull-board/api/bullMQAdapter";
+import {
+  QueuePro,
+  WorkerPro,
+  FlowProducerPro,
+  QueueSchedulerPro,
+} from "@taskforcesh/bullmq-pro";
 
-const bullConnectionOptions = {
-  prefix: "lukepolo",
-  connection: {
-    db: 1,
-    port: 6386,
+const prefix = "lukepolo";
+const queueName = "default";
+const connection = new IORedis({
+  db: 1,
+  port: 6386,
+  enableReadyCheck: false,
+  enableOfflineQueue: true,
+  maxRetriesPerRequest: null,
+  showFriendlyErrorStack: true,
+  retryStrategy() {
+    return 5 * 1000;
   },
+});
+
+const bullQueueOptions = {
+  prefix,
+  connection,
 };
-const defaultQueue = new QueuePro("default", bullConnectionOptions);
+
+const defaultQueue = new QueuePro(
+  queueName,
+  Object.assign(
+    {
+      isPro: true,
+    },
+    bullQueueOptions
+  )
+);
+
+new FlowProducerPro(bullQueueOptions);
 
 const serverAdapter = new ExpressAdapter();
 serverAdapter.setBasePath("/queues");
@@ -25,18 +53,21 @@ const app = express();
 
 app.use("/queues", serverAdapter.getRouter());
 
-app.listen(3000, () => {
-  console.log("open http://localhost:3000/queues");
+app.listen(3001, () => {
+  console.log("open http://localhost:3001/queues");
 });
 
-import { WorkerPro } from "@taskforcesh/bullmq-pro";
+new QueueSchedulerPro(queueName, {
+  prefix,
+  connection,
+});
 
 new WorkerPro(
-  "default",
+  queueName,
   async (job) => {
-    console.log(`Process Job on Default`, job.data);
+    console.log(`Process Job on ${queueName}`, job.data);
   },
-  bullConnectionOptions
+  Object.assign(bullQueueOptions)
 );
 
 setInterval(() => {
