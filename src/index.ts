@@ -22,13 +22,13 @@ const redisConnectionOptions = {
   retryStrategy() {
     return 5 * 1000;
   },
-}
+};
 
 const connection = new IORedis(redisConnectionOptions);
 
 const bullQueueOptions = {
   prefix,
-  connection
+  connection,
   // connection: redisConnectionOptions,
 };
 
