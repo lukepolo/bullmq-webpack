@@ -27,9 +27,9 @@ app.listen(3000, () => {
   console.log("open http://localhost:3000/queues");
 });
 
-import { Worker } from "bullmq";
+import { WorkerPro } from "@taskforcesh/bullmq-pro";
 
-new Worker(
+new WorkerPro(
   "default",
   async (job) => {
     console.log(`Process Job on Default`, job.data);
