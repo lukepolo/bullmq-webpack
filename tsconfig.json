@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "incremental": true,
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "es2019",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "isolatedModules": true,
+    "importHelpers": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "paths": {},
+    "types": ["node"],
+    "lib": ["es2020"],
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
+  },
+  "include": ["./src/**/*"]
+}

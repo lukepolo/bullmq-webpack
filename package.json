@@ -1,0 +1,27 @@
+{
+  "scripts": {
+    "build": "webpack --mode production",
+    "watch": "rimraf dist && npm-run-all -p nodemon \"build -- --watch --mode development\"",
+    "nodemon": "wait-on dist/app.js && nodemon --watch dist/app.js ./dist/app.js",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down"
+  },
+  "devDependencies": {
+    "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "nodemon": "^2.0.19",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
+    "ts-loader": "^9.3.1",
+    "ts-node": "^10.9.1",
+    "tslib": "^2.4.0",
+    "typescript": "^4.7.4",
+    "wait-on": "^6.0.1",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
+  },
+  "dependencies": {
+    "@bull-board/express": "^4.1.1",
+    "@taskforcesh/bullmq-pro": "^2.3.9"
+  }
+}
