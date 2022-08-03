@@ -4,12 +4,14 @@ import { QueuePro } from "@taskforcesh/bullmq-pro";
 import { ExpressAdapter } from "@bull-board/express";
 import { BullMQAdapter } from "@bull-board/api/bullMQAdapter";
 
-const connection = {
-  port: 6386,
+const bullConnectionOptions = {
+  prefix: "lukepolo",
+  connection: {
+    db: 1,
+    port: 6386,
+  },
 };
-const defaultQueue = new QueuePro("default", {
-  connection,
-});
+const defaultQueue = new QueuePro("default", bullConnectionOptions);
 
 const serverAdapter = new ExpressAdapter();
 serverAdapter.setBasePath("/queues");
@@ -34,11 +36,9 @@ new WorkerPro(
   async (job) => {
     console.log(`Process Job on Default`, job.data);
   },
-  {
-    connection,
-  }
+  bullConnectionOptions
 );
 
 setInterval(() => {
   defaultQueue.add("myJobName", { foo: "bar" });
-}, 1000)
+}, 1000);
