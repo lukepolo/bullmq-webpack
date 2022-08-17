@@ -77,7 +77,7 @@ setInterval(() => {
 /**
  * Setup shutdown procedure for when workers are running
  */
-process.once("SIGTERM", async () => {
+process.once("SIGUSR2", async () => {
   console.warn(`Gracefully Shutting Down...`);
   console.info(`---------------------------`);
   console.warn(`Stopping Workers...`);
@@ -98,3 +98,4 @@ process.once("SIGTERM", async () => {
 
   process.exit(0);
 });
+
