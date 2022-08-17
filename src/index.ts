@@ -1,8 +1,4 @@
-import express from "express";
 import IORedis from "ioredis";
-import { createBullBoard } from "@bull-board/api";
-import { ExpressAdapter } from "@bull-board/express";
-import { BullMQAdapter } from "@bull-board/api/bullMQAdapter";
 import {
   QueuePro,
   WorkerPro,
@@ -32,25 +28,8 @@ const bullQueueOptions = {
   // connection: redisConnectionOptions,
 };
 
-const defaultQueue = new QueuePro(queueName, bullQueueOptions);
-
 new FlowProducerPro(bullQueueOptions);
-
-const serverAdapter = new ExpressAdapter();
-serverAdapter.setBasePath("/queues");
-
-createBullBoard({
-  serverAdapter,
-  queues: [new BullMQAdapter(defaultQueue)],
-});
-
-const app = express();
-
-app.use("/queues", serverAdapter.getRouter());
-
-app.listen(3001, () => {
-  console.log("open http://localhost:3001/queues");
-});
+const defaultQueue = new QueuePro(queueName, bullQueueOptions);
 
 new QueueSchedulerPro(queueName, bullQueueOptions);
 
@@ -98,4 +77,3 @@ process.once("SIGUSR2", async () => {
 
   process.exit(0);
 });
-
