@@ -10,7 +10,7 @@ const prefix = "lukepolo-2";
 const queueName = "default";
 const redisConnectionOptions = {
   db: 1,
-  port: 6379,
+  port: 6386,
   enableReadyCheck: false,
   enableOfflineQueue: true,
   maxRetriesPerRequest: null,
