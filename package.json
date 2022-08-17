@@ -22,7 +22,6 @@
     "webpack-cli": "^4.10.0"
   },
   "dependencies": {
-    "@bull-board/express": "^4.1.1",
     "@taskforcesh/bullmq-pro": "^2.3.9"
   }
 }
