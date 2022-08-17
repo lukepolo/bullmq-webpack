@@ -2,6 +2,7 @@
   "scripts": {
     "build": "webpack --mode production",
     "watch": "rimraf dist && npm-run-all -p nodemon \"build -- --watch --mode development\"",
+    "ts": "ts-node ./src",
     "nodemon": "wait-on dist/app.js && nodemon --watch dist/app.js ./dist/app.js",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down"

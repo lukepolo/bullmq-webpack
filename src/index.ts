@@ -14,7 +14,7 @@ const prefix = "lukepolo-2";
 const queueName = "default";
 const redisConnectionOptions = {
   db: 1,
-  port: 6386,
+  port: 6379,
   enableReadyCheck: false,
   enableOfflineQueue: true,
   maxRetriesPerRequest: null,
@@ -77,7 +77,7 @@ setInterval(() => {
 /**
  * Setup shutdown procedure for when workers are running
  */
-process.once(DEV ? "SIGUSR2" : "SIGTERM", async () => {
+process.once("SIGTERM", async () => {
   console.warn(`Gracefully Shutting Down...`);
   console.info(`---------------------------`);
   console.warn(`Stopping Workers...`);
